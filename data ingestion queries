@@ -30,6 +30,8 @@ from yelp_reviews;
 select count(*) from yelp_reviews_table;
 select * from yelp_reviews_table limit 10;
 
+
+
 ##2. Business Table
 
 create or replace table yelp_businesses (business_text variant)
@@ -45,8 +47,6 @@ FILE_FORMAT = (TYPE = JSON);
 
 
 select * from yelp_businesses limit 10;
-
-
 
 -- create a business table from the JSON data
 create or replace table yelp_businesses_table as 
