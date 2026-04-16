@@ -1,4 +1,3 @@
-
 -- create a fucntion to do the sentiment analysis
 CREATE OR REPLACE FUNCTION analyze_sentiment(text STRING)
 RETURNS STRING
