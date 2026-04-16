@@ -1,3 +1,6 @@
+#DATA INGESTION QUERIES
+
+##1. Review Table
 
 create or replace table yelp_reviews (review_text variant)
 
@@ -27,6 +30,7 @@ from yelp_reviews;
 select count(*) from yelp_reviews_table;
 select * from yelp_reviews_table limit 10;
 
+##2. Business Table
 
 create or replace table yelp_businesses (business_text variant)
 
