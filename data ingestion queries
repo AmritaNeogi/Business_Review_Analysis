@@ -1,0 +1,58 @@
+
+create or replace table yelp_reviews (review_text variant)
+
+-- Copy files from S3
+-- make sure to have only split data while running this query
+COPY INTO yelp_reviews
+FROM 's3://yelp-json-ingestion-dev/input-review-files/'
+CREDENTIALS = (
+AWS_KEY_ID = 'AKIAUR6GVZYCUBHVH2KG'
+AWS_SECRET_KEY = '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'
+)
+FILE_FORMAT = (TYPE = JSON);
+
+select * from yelp_reviews limit 10;
+
+-- convert the JSON data into tables
+-- selected only the required columns that we need for further analysis
+create or replace table yelp_reviews_table as
+select review_text:business_id::string as business_id
+,review_text:date::date as review_date 
+,review_text:user_id::string as user_id -- for solving questions later
+,review_text:stars::number as review_stars
+,review_text:text::string as review_text
+,analyze_sentiment(review_text) as sentiments -- using the sentiment analysis function we created earlier
+from yelp_reviews;
+
+select count(*) from yelp_reviews_table;
+select * from yelp_reviews_table limit 10;
+
+
+create or replace table yelp_businesses (business_text variant)
+
+-- Copy files from S3
+COPY INTO yelp_businesses
+FROM 's3://yelp-json-ingestion-dev/input-review-files/yelp_academic_dataset_business.json'
+CREDENTIALS = (
+AWS_KEY_ID = 'AKIAUR6GVZYCUBHVH2KG'
+AWS_SECRET_KEY = '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'
+)
+FILE_FORMAT = (TYPE = JSON);
+
+
+select * from yelp_businesses limit 10;
+
+
+
+-- create a business table from the JSON data
+create or replace table yelp_businesses_table as 
+select business_text:business_id::string as business_id
+,business_text:name::string as name
+,business_text:city::string as city
+,business_text:state::string as state
+,business_text:review_count::string as review_count
+,business_text:stars::number as stars
+,business_text:categories::string as categories
+from yelp_businesses;
+
+select count(*) from yelp_businesses_table;
