@@ -9,8 +9,8 @@ create or replace table yelp_reviews (review_text variant)
 COPY INTO yelp_reviews
 FROM 's3://yelp-json-ingestion-dev/input-review-files/'
 CREDENTIALS = (
-AWS_KEY_ID = 'AKIAUR6GVZYCUBHVH2KG'
-AWS_SECRET_KEY = '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'
+AWS_KEY_ID = '********************'
+AWS_SECRET_KEY = '************************************************'
 )
 FILE_FORMAT = (TYPE = JSON);
 
@@ -30,6 +30,8 @@ from yelp_reviews;
 select count(*) from yelp_reviews_table;
 select * from yelp_reviews_table limit 10;
 
+
+
 ##2. Business Table
 
 create or replace table yelp_businesses (business_text variant)
@@ -38,15 +40,13 @@ create or replace table yelp_businesses (business_text variant)
 COPY INTO yelp_businesses
 FROM 's3://yelp-json-ingestion-dev/input-review-files/yelp_academic_dataset_business.json'
 CREDENTIALS = (
-AWS_KEY_ID = 'AKIAUR6GVZYCUBHVH2KG'
-AWS_SECRET_KEY = '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'
+AWS_KEY_ID = '********************'
+AWS_SECRET_KEY = '************************************************'
 )
 FILE_FORMAT = (TYPE = JSON);
 
 
 select * from yelp_businesses limit 10;
-
-
 
 -- create a business table from the JSON data
 create or replace table yelp_businesses_table as 
