@@ -1,0 +1,142 @@
+
+-- Business Analysis Questions
+
+--1. Find the number of business in each unique category.
+with cte as (
+select business_id, trim(A.value) as category
+from yelp_businesses_table
+, lateral split_to_table(categories, ',') A
+)
+select business_id, count(*) as no_of_business
+from cte
+group by 1
+order by 2 desc;
+
+--2. Find the top 10 users who have reviewed the most businesses in the 'Restuarants' category.
+with cte as (
+select r.user_id, b.business_id, trim(A.value) as category
+from yelp_businesses_table b
+inner join yelp_reviews_table r
+on b.business_id = r.business_id
+, lateral split_to_table(b.categories, ',') A --- only issue is 'lateral split_to_table' is a costly operation
+),
+cte2 as(
+select user_id, count(distinct business_id) as num_cat
+from cte
+where category ilike '%restaurants%'
+and user_id is not null
+group by 1
+)
+select user_id, num_cat
+from cte2
+order by num_cat desc
+limit 10;
+
+-- less costly way of quering
+select r.user_id, count(distinct r.business_id)
+from yelp_reviews_table r
+inner join yelp_businesses_table b
+on b.business_id = r.business_id
+where b.categories ilike '%restaurant%'
+and r.user_id is not null
+group by 1
+order by 2 desc
+limit 10;
+
+--NOTE:
+--I noticed a NULL user_id group with a large count, which suggests missing or incomplete user identifiers. 
+--I would exclude those for user-level analysis or investigate upstream data quality issues.
+
+
+--3. Find the most popular categories of businesses (based on the max number of reviews and not the number of stars).
+with cte as (
+select r.user_id, r.review_stars, b.business_id, trim(A.value) as category
+from yelp_businesses_table b
+inner join yelp_reviews_table r
+on b.business_id = r.business_id
+, lateral split_to_table(b.categories, ',') A
+)
+select category, count(*) as no_of_reviews
+from cte
+group by 1
+order by 2 desc;
+
+
+
+--4. Find the top 3 most recent reviews for each business.
+with cte as (
+select r.review_date, b.business_id,b.name as business_name
+from yelp_businesses_table b
+inner join yelp_reviews_table r
+on b.business_id = r.business_id
+),
+cte2 as (
+select business_name, business_id, 
+row_number() over(partition by business_id order by review_date desc) as recent_reviews
+from cte
+)
+select business_id, business_name, recent_reviews
+from cte2
+where recent_reviews in (1,2,3);
+
+
+-- If multiple reviews on the same business have the same review_date, and you want deterministic output
+-- most robust window would be: row_number() over (partition by business_id order by review_date desc, user_id)
+
+with cte as (
+select r.user_id, r.review_date,r.review_stars, b.business_id,b.name as business_name
+from yelp_businesses_table b
+inner join yelp_reviews_table r
+on b.business_id = r.business_id
+where r.user_id is not null
+),
+cte2 as (
+select business_name, business_id, user_id, review_stars, review_date,
+row_number() over (partition by business_id order by review_date desc, user_id) as recent_reviews
+from cte
+)
+select business_id, business_name, user_id, review_stars, review_date, recent_reviews
+from cte2
+where recent_reviews<=3;
+
+
+--5. Find the month with highest number of reviews.
+with cte as (
+select user_id, review_date, 
+trim(to_varchar(review_date, 'MMMM')) AS review_month, -- using 'Month' will yield names like: Janth, Novth, Octth, etc.
+review_stars
+from yelp_reviews_table
+where review_date is not null
+)
+select review_month, count(review_stars) as review_count
+from cte
+group by 1
+order by 2 desc;
+
+
+--6. Find the percentage of 5-star reviews for each business.
+with cte as (
+select r.user_id, r.review_stars, b.business_id,b.name as business_name
+from yelp_businesses_table b
+inner join yelp_reviews_table r
+on b.business_id = r.business_id
+)
+select business_id,business_name, 
+round(count(case when review_stars = 5 then 1 end) * 100.0 
+        / count(*),2) as pct_5_star_reviews
+from cte
+group by 1,2;
+
+
+--7. Find the top 5 most reviewed businesses in each city.
+with cte as (
+select b.city, b.business_id, b.name, count(*) as total_review,
+from yelp_reviews_table r
+inner join yelp_businesses_table b
+on r.business_id = b.business_id
+group by 1,2,3
+)
+select *
+from cte
+qualify row_number() over(partition by city order by total_review desc) <= 5
+order by city;
