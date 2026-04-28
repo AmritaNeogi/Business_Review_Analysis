@@ -123,8 +123,7 @@ inner join yelp_reviews_table r
 on b.business_id = r.business_id
 )
 select business_id,business_name, 
-round(count(case when review_stars = 5 then 1 end) * 100.0 
-        / count(*),2) as pct_5_star_reviews
+round(count(case when review_stars = 5 then 1 end) * 100.0 / count(*),2) as pct_5_star_reviews
 from cte
 group by 1,2;
 
