@@ -16,3 +16,6 @@ def sentiment_analyzer(text):
     else:
         return 'Negative'
 $$;
+
+-- To enrich the review dataset, I created a Snowflake Python UDF using TextBlob to classify each review as positive, neutral, or negative based on polarity score. 
+-- The sentiment output was stored directly in the structured review table, allowing business-level sentiment analysis to be performed with SQL.
