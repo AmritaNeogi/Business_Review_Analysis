@@ -8,4 +8,4 @@ This project demonstrates an end-to-end cloud analytics pipeline using AWS S3, S
 
 
 
-<div class="image-container"><img src="/Volumes/Personal Drive/GitHub/Business_Review_Anlalysis/Analytics Pipeline.png" alt="Project Image"> </div>
+<div class="image-container"><img src="/Business_Review_Anlalysis/Analytics Pipeline.png" alt="Project Image"> </div>
