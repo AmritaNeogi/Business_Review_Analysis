@@ -1,4 +1,7 @@
-# Business_Review_Analysis
+# BUSINESS REVIEW ANALYSIS
 
 
 **Link to downlaod the dataset**: https://business.yelp.com/data/resources/open-dataset/
+
+## Overview
+This project demonstrates an end-to-end cloud analytics pipeline using AWS S3, Snowflake, Alteryx, SQL, and Python UDFs. A large Yelp review JSON dataset was split into smaller files, staged in AWS S3, and ingested into Snowflake using semi-structured VARIANT tables. The raw JSON data was transformed into structured review and business tables, enriched with sentiment labels using a Snowflake Python UDF, validated through Alteryx workflows, and modeled into BI-ready datasets for review trends, category performance, user behavior, and business sentiment analysis.
