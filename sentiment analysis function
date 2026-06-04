@@ -1,3 +1,5 @@
+# Step 1: FUNCTION FOR SENTIMENT ANALYSIS (sentiment_udf.sql in Snowflake)
+
 -- create a fucntion to do the sentiment analysis
 CREATE OR REPLACE FUNCTION analyze_sentiment(text STRING)
 RETURNS STRING
