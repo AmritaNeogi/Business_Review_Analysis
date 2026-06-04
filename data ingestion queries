@@ -45,11 +45,14 @@ create or replace table yelp_businesses (business_text variant)
 COPY INTO yelp_businesses
 FROM 's3://yelp-json-ingestion-dev/input-review-files/yelp_academic_dataset_business.json'
 CREDENTIALS = (
-AWS_KEY_ID = '********************'
-AWS_SECRET_KEY = '************************************************'
+AWS_KEY_ID = $AWS_KEY_ID
+  AWS_SECRET_KEY = $AWS_SECRET_KEY
 )
 FILE_FORMAT = (TYPE = JSON);
+ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
 
+-- Validate what was loaded
+SELECT * FROM TABLE(VALIDATE(yelp_businesses, JOB_ID => '_last'));
 
 select * from yelp_businesses limit 10;
 
