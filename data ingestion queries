@@ -14,6 +14,10 @@ CREDENTIALS = (
   AWS_SECRET_KEY = $AWS_SECRET_KEY
 )
 FILE_FORMAT = (TYPE = JSON);
+ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
+
+-- Validate what was loaded
+SELECT * FROM TABLE(VALIDATE(yelp_reviews, JOB_ID => '_last'));
 
 select * from yelp_reviews limit 10;
 
