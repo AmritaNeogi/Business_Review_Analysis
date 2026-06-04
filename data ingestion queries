@@ -6,11 +6,12 @@ create or replace table yelp_reviews (review_text variant)
 
 -- Copy files from S3
 -- make sure to have only split data while running this query
+-- Snowflake Storage Integration 
 COPY INTO yelp_reviews
 FROM 's3://yelp-json-ingestion-dev/input-review-files/'
 CREDENTIALS = (
-AWS_KEY_ID = '********************'
-AWS_SECRET_KEY = '************************************************'
+  AWS_KEY_ID = $AWS_KEY_ID
+  AWS_SECRET_KEY = $AWS_SECRET_KEY
 )
 FILE_FORMAT = (TYPE = JSON);
 
