@@ -1,20 +1,42 @@
-#DATA INGESTION QUERIES
+# STEP 3: DATA INGESTION QUERIES
 
+----------------------------------------------------------------------------------------------------------------------------------------------------
+-- NOTE: analyze_sentiment() UDF must be created before running this script.
+-- See: sentiment_udf.sql (run separately in Snowflake)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- Create a reusable stage pointing to the S3 bucket
+-- Credentials managed via Snowflake Storage Integration (IAM role) in production
+
+CREATE OR REPLACE STAGE yelp_s3_stage
+  URL = 's3://yelp-json-ingestion-dev/input-review-files/'
+  CREDENTIALS = (
+    AWS_KEY_ID = $AWS_KEY_ID
+    AWS_SECRET_KEY = $AWS_SECRET_KEY
+  )
+  FILE_FORMAT = (TYPE = JSON);
+
+--Sanity check
+-- Verify stage is connected and files are visible
+LIST @yelp_s3_stage;
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
 ##1. Review Table
-
-create or replace table yelp_reviews (review_text variant)
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Copy files from S3
 -- make sure to have only split data while running this query
-COPY INTO yelp_reviews
-FROM 's3://yelp-json-ingestion-dev/input-review-files/'
-CREDENTIALS = (
-AWS_KEY_ID = '********************'
-AWS_SECRET_KEY = '************************************************'
-)
-FILE_FORMAT = (TYPE = JSON);
 
-select * from yelp_reviews limit 10;
+create or replace table yelp_reviews (review_text variant)
+COPY INTO yelp_reviews
+FROM @yelp_s3_stage
+ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
+
+-- Validate what was loaded
+SELECT * FROM TABLE(VALIDATE(yelp_reviews, JOB_ID => '_last'));
+
 
 -- convert the JSON data into tables
 -- selected only the required columns that we need for further analysis
@@ -28,25 +50,23 @@ select review_text:business_id::string as business_id
 from yelp_reviews;
 
 select count(*) from yelp_reviews_table;
-select * from yelp_reviews_table limit 10;
 
 
 
+----------------------------------------------------------------------------------------------------------------------------------------------------
 ##2. Business Table
-
-create or replace table yelp_businesses (business_text variant)
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Copy files from S3
+create or replace table yelp_businesses (business_text variant)
 COPY INTO yelp_businesses
-FROM 's3://yelp-json-ingestion-dev/input-review-files/yelp_academic_dataset_business.json'
-CREDENTIALS = (
-AWS_KEY_ID = '********************'
-AWS_SECRET_KEY = '************************************************'
-)
-FILE_FORMAT = (TYPE = JSON);
+FROM '@yelp_s3_stage/yelp_academic_dataset_business.json'
+ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
+
+-- Validate what was loaded
+SELECT * FROM TABLE(VALIDATE(yelp_businesses, JOB_ID => '_last'));
 
 
-select * from yelp_businesses limit 10;
 
 -- create a business table from the JSON data
 create or replace table yelp_businesses_table as 

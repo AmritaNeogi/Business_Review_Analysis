@@ -1,7 +1,10 @@
 
--- Business Analysis Questions
+-- STEP 4: BUSINESS ABALYSIS QUESTIONS
 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --1. Find the number of business in each unique category.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select business_id, trim(A.value) as category
 from yelp_businesses_table
@@ -12,7 +15,9 @@ from cte
 group by 1
 order by 2 desc;
 
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --2. Find the top 10 users who have reviewed the most businesses in the 'Restuarants' category.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select r.user_id, b.business_id, trim(A.value) as category
 from yelp_businesses_table b
@@ -48,7 +53,9 @@ limit 10;
 --I would exclude those for user-level analysis or investigate upstream data quality issues.
 
 
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --3. Find the most popular categories of businesses (based on the max number of reviews and not the number of stars).
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select r.user_id, r.review_stars, b.business_id, trim(A.value) as category
 from yelp_businesses_table b
@@ -62,8 +69,9 @@ group by 1
 order by 2 desc;
 
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --4. Find the top 3 most recent reviews for each business.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select r.review_date, b.business_id,b.name as business_name
 from yelp_businesses_table b
@@ -99,8 +107,9 @@ select business_id, business_name, user_id, review_stars, review_date, recent_re
 from cte2
 where recent_reviews<=3;
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --5. Find the month with highest number of reviews.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select user_id, review_date, 
 trim(to_varchar(review_date, 'MMMM')) AS review_month, -- using 'Month' will yield names like: Janth, Novth, Octth, etc.
@@ -113,8 +122,9 @@ from cte
 group by 1
 order by 2 desc;
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --6. Find the percentage of 5-star reviews for each business.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 -- What percent of this business’s reviews are 5-star?
 with cte as (
 select r.user_id, r.review_stars, b.business_id,b.name as business_name
@@ -136,8 +146,9 @@ inner join yelp_businesses_table b
 on r.business_id = b.business_id
 group by 1,2;
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --7. Find the top 5 most reviewed businesses in each city.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select b.city, b.business_id, b.name, count(*) as total_review,
 from yelp_reviews_table r
@@ -150,8 +161,9 @@ from cte
 qualify row_number() over(partition by city order by total_review desc) <= 5
 order by city;
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --8. Find the average rating of businesses that have at least 100 reviews.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 -- First find businesses with at least 100 reviews
 with cte as (
 select b.business_id, b.name, count(*) as total_review,
@@ -165,8 +177,9 @@ select *
 from cte
 where total_review >= 100;
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --9. List the top 10 users who have written the most reviews, along with the businesses they reviewed.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select distinct r.user_id, count(*) as total_review_count,
 from yelp_reviews_table r
@@ -183,8 +196,9 @@ group by 1,2
 order by 1;
 
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------
 --10. Find top 10 businesses with highest positive sentiment reviews.
+--------------------------------------------------------------------------------------------------------------------------------------------------
 with cte as (
 select business_id, count(sentiments) as tot_pos
 from yelp_reviews_table
