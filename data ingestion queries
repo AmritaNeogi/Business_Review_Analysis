@@ -1,4 +1,10 @@
-#DATA INGESTION QUERIES
+# DATA INGESTION QUERIES
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+-- NOTE: analyze_sentiment() UDF must be created before running this script.
+-- See: sentiment_udf.sql (run separately in Snowflake)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 -- Create a reusable stage pointing to the S3 bucket
 -- Credentials managed via Snowflake Storage Integration (IAM role) in production
