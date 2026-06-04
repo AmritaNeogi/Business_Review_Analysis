@@ -1,4 +1,4 @@
-# DATA INGESTION QUERIES
+# STEP 3: DATA INGESTION QUERIES
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 -- NOTE: analyze_sentiment() UDF must be created before running this script.
