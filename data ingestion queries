@@ -36,6 +36,8 @@ PATTERN = '.*split_file_.*\.json'
 ON_ERROR = 'CONTINUE' -- or SKIP_FILE, ABORT_STATEMENT
 FORCE = TRUE;  -- bypasses Snowflake's load deduplication to reload already-processed files
 
+SELECT COUNT(*) FROM yelp_reviews; --6990280
+
 -- Validate what was loaded
 SELECT * FROM TABLE(VALIDATE(yelp_reviews, JOB_ID => '_last'));
 
@@ -51,7 +53,7 @@ select review_text:business_id::string as business_id
 ,analyze_sentiment(review_text:text::string) as sentiments -- using the sentiment analysis function we created earlier
 from yelp_reviews;
 
-select count(*) from yelp_reviews_table;
+select count(*) from yelp_reviews_table; --6990280
 
 
 
@@ -63,7 +65,10 @@ select count(*) from yelp_reviews_table;
 create or replace table yelp_businesses (business_text variant);
 COPY INTO yelp_businesses
 FROM '@yelp_s3_stage/yelp_academic_dataset_business.json'
-ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
+ON_ERROR = 'CONTINUE' -- or SKIP_FILE, ABORT_STATEMENT
+FORCE = TRUE;  -- bypasses Snowflake's load deduplication to reload already-processed files
+
+SELECT COUNT(*) FROM yelp_businesses; --150346
 
 -- Validate what was loaded
 SELECT * FROM TABLE(VALIDATE(yelp_businesses, JOB_ID => '_last'));
@@ -81,4 +86,4 @@ select business_text:business_id::string as business_id
 ,business_text:categories::string as categories
 from yelp_businesses;
 
-select count(*) from yelp_businesses_table;
+select count(*) from yelp_businesses_table; --150346
