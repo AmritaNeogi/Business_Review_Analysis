@@ -50,7 +50,7 @@ select review_text:business_id::string as business_id
 ,review_text:user_id::string as user_id -- for solving questions later
 ,review_text:stars::number as review_stars
 ,review_text:text::string as review_text
-,analyze_sentiment(review_text:text::string) as sentiments -- using the sentiment analysis function we created earlier
+,analyze_sentiment(review_text:text::string) as sentiments -- using the sentiment analysis function we created in STEP 2
 from yelp_reviews;
 
 select count(*) from yelp_reviews_table; --6990280
