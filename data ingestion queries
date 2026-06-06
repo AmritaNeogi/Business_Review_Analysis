@@ -32,6 +32,7 @@ LIST @yelp_s3_stage;
 create or replace table yelp_reviews (review_text variant);
 COPY INTO yelp_reviews
 FROM @yelp_s3_stage
+PATTERN = 'split_file_.*\.json'
 ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
 
 -- Validate what was loaded
