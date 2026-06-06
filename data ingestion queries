@@ -32,8 +32,9 @@ LIST @yelp_s3_stage;
 create or replace table yelp_reviews (review_text variant);
 COPY INTO yelp_reviews
 FROM @yelp_s3_stage
-PATTERN = 'split_file_.*\.json'
-ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
+PATTERN = '.*split_file_.*\.json'
+ON_ERROR = 'CONTINUE' -- or SKIP_FILE, ABORT_STATEMENT
+FORCE = TRUE;  -- bypasses Snowflake's load deduplication to reload already-processed files
 
 -- Validate what was loaded
 SELECT * FROM TABLE(VALIDATE(yelp_reviews, JOB_ID => '_last'));
