@@ -1,0 +1,42 @@
+--STEP 4: CREATE SUPPORT TABLES
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+-- ##1. Category Table
+----------------------------------------------------------------------------------------------------------------------------------------------------
+-- Create this after your yelp_businesses_table
+-- Pre-explode categories once for reuse across queries
+-- Avoids repeating costly lateral split_to_table operations
+
+create or replace table yelp_business_categories as
+select 
+    business_id,
+    trim(A.value) as category
+from yelp_businesses_table
+, lateral split_to_table(categories, ',') A
+where trim(A.value) is not null
+and trim(A.value) != '';
+
+select count(*) from yelp_business_categories; -- 668592
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+-- ##2. The JOIN between yelp_reviews_table and yelp_businesses_table
+----------------------------------------------------------------------------------------------------------------------------------------------------
+-- Pre-joined base table for review-level analysis
+create or replace table yelp_reviews_enriched as
+select 
+    r.user_id,
+    r.business_id,
+    r.review_date,
+    r.review_stars,
+    r.review_text,
+    r.sentiments,
+    b.name as business_name,
+    b.city,
+    b.state,
+    b.categories,
+    b.stars as business_stars
+from yelp_reviews_table r
+inner join yelp_businesses_table b
+    on r.business_id = b.business_id;
+
+select count(*) from yelp_reviews_enriched;

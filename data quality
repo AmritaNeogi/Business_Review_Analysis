@@ -1,0 +1,29 @@
+--# STEP 3.1: DATA QUALITY SUMMARY
+
+create or replace table yelp_data_quality_summary as
+
+select 'yelp_reviews_table' as table_name,
+    count(*) as total_records,
+    count(business_id) as non_null_business_id,
+    count(user_id) as non_null_user_id,
+    count(review_date) as non_null_dates,
+    count(review_stars) as non_null_stars,
+    sum(case when review_stars not between 1 and 5 then 1 else 0 end) as invalid_stars,
+    min(review_date) as earliest_review,
+    max(review_date) as latest_review
+from yelp_reviews_table
+
+union all
+
+select 'yelp_businesses_table' as table_name,
+    count(*) as total_records,
+    count(business_id) as non_null_business_id,
+    null as non_null_user_id,
+    null as non_null_dates,
+    count(stars) as non_null_stars,
+    sum(case when stars not between 1 and 5 then 1 else 0 end) as invalid_stars,
+    null as earliest_review,
+    null as latest_review
+from yelp_businesses_table;
+
+select * from yelp_data_quality_summary;
