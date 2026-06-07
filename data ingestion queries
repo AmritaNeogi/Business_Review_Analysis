@@ -29,10 +29,14 @@ LIST @yelp_s3_stage;
 -- Copy files from S3
 -- make sure to have only split data while running this query
 
-create or replace table yelp_reviews (review_text variant)
+create or replace table yelp_reviews (review_text variant);
 COPY INTO yelp_reviews
 FROM @yelp_s3_stage
-ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
+PATTERN = '.*split_file_.*\.json'
+ON_ERROR = 'CONTINUE' -- or SKIP_FILE, ABORT_STATEMENT
+FORCE = TRUE;  -- bypasses Snowflake's load deduplication to reload already-processed files
+
+SELECT COUNT(*) FROM yelp_reviews; --6990280
 
 -- Validate what was loaded
 SELECT * FROM TABLE(VALIDATE(yelp_reviews, JOB_ID => '_last'));
@@ -46,10 +50,10 @@ select review_text:business_id::string as business_id
 ,review_text:user_id::string as user_id -- for solving questions later
 ,review_text:stars::number as review_stars
 ,review_text:text::string as review_text
-,analyze_sentiment(review_text) as sentiments -- using the sentiment analysis function we created earlier
+,analyze_sentiment(review_text:text::string) as sentiments -- using the sentiment analysis function we created in STEP 2
 from yelp_reviews;
 
-select count(*) from yelp_reviews_table;
+select count(*) from yelp_reviews_table; --6990280
 
 
 
@@ -58,10 +62,13 @@ select count(*) from yelp_reviews_table;
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Copy files from S3
-create or replace table yelp_businesses (business_text variant)
+create or replace table yelp_businesses (business_text variant);
 COPY INTO yelp_businesses
 FROM '@yelp_s3_stage/yelp_academic_dataset_business.json'
-ON_ERROR = 'CONTINUE';  -- or SKIP_FILE, ABORT_STATEMENT
+ON_ERROR = 'CONTINUE' -- or SKIP_FILE, ABORT_STATEMENT
+FORCE = TRUE;  -- bypasses Snowflake's load deduplication to reload already-processed files
+
+SELECT COUNT(*) FROM yelp_businesses; --150346
 
 -- Validate what was loaded
 SELECT * FROM TABLE(VALIDATE(yelp_businesses, JOB_ID => '_last'));
@@ -79,4 +86,4 @@ select business_text:business_id::string as business_id
 ,business_text:categories::string as categories
 from yelp_businesses;
 
-select count(*) from yelp_businesses_table;
+select count(*) from yelp_businesses_table; --150346
