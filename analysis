@@ -10,7 +10,7 @@ select business_id, trim(A.value) as category
 from yelp_businesses_table
 , lateral split_to_table(categories, ',') A
 )
-select business_id, count(*) as no_of_business
+select category, count(distinct business_id) as no_of_businesses
 from cte
 group by 1
 order by 2 desc;
