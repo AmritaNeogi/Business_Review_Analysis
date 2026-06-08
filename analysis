@@ -1,49 +1,26 @@
 
 -- STEP 4: BUSINESS ABALYSIS QUESTIONS
 
-
 --------------------------------------------------------------------------------------------------------------------------------------------------
 --1. Find the number of business in each unique category.
 --------------------------------------------------------------------------------------------------------------------------------------------------
-with cte as (
-select business_id, trim(A.value) as category
-from yelp_businesses_table
-, lateral split_to_table(categories, ',') A
-)
 select category, count(distinct business_id) as no_of_businesses
-from cte
+from yelp_business_categories
 group by 1
 order by 2 desc;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 --2. Find the top 10 users who have reviewed the most businesses in the 'Restuarants' category.
 --------------------------------------------------------------------------------------------------------------------------------------------------
-with cte as (
-select r.user_id, b.business_id, trim(A.value) as category
-from yelp_businesses_table b
-inner join yelp_reviews_table r
-on b.business_id = r.business_id
-, lateral split_to_table(b.categories, ',') A --- only issue is 'lateral split_to_table' is a costly operation
-),
-cte2 as(
-select user_id, count(distinct business_id) as num_cat
-from cte
-where category ilike '%restaurants%'
-and user_id is not null
-group by 1
-)
-select user_id, num_cat
-from cte2
-order by num_cat desc
-limit 10;
-
--- less costly way of quering
-select r.user_id, count(distinct r.business_id)
+-- Using yelp_business_categories to avoid repeated lateral split_to_table
+select 
+    r.user_id,
+    count(distinct r.business_id) as businesses_reviewed
 from yelp_reviews_table r
-inner join yelp_businesses_table b
-on b.business_id = r.business_id
-where b.categories ilike '%restaurant%'
-and r.user_id is not null
+inner join yelp_business_categories bc
+    on r.business_id = bc.business_id
+where bc.category ilike '%restaurant%'
+and r.user_id is not null  -- excluding null user_ids due to upstream data quality issues
 group by 1
 order by 2 desc
 limit 10;
@@ -52,21 +29,18 @@ limit 10;
 --I noticed a NULL user_id group with a large count, which suggests missing or incomplete user identifiers. 
 --I would exclude those for user-level analysis or investigate upstream data quality issues.
 
-
 --------------------------------------------------------------------------------------------------------------------------------------------------
---3. Find the most popular categories of businesses (based on the max number of reviews and not the number of stars).
+--3. Find the most popular categories of businesses (based on the max number of reviews and not the number of stars); top 20.
 --------------------------------------------------------------------------------------------------------------------------------------------------
-with cte as (
-select r.user_id, r.review_stars, b.business_id, trim(A.value) as category
-from yelp_businesses_table b
-inner join yelp_reviews_table r
-on b.business_id = r.business_id
-, lateral split_to_table(b.categories, ',') A
-)
-select category, count(*) as no_of_reviews
-from cte
+select 
+    bc.category,
+    count(*) as total_reviews
+from yelp_reviews_table r
+inner join yelp_business_categories bc
+    on r.business_id = bc.business_id
 group by 1
-order by 2 desc;
+order by 2 desc
+limit 20;
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
