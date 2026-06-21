@@ -118,6 +118,12 @@ Run `analysis` to execute 10 business questions against the prepared tables.
 
 ## Data Model
 
+<div class="image-container">
+  <img src="yelp_data_model.jpg" alt="Data Model">
+</div>
+
+---
+<!--
 ```
 yelp_reviews_table          yelp_businesses_table
 ├── business_id (FK) ──────► business_id (PK)
@@ -135,9 +141,7 @@ yelp_reviews_table          yelp_businesses_table
 yelp_reviews_enriched        ← join of reviews + businesses (pre-built for efficiency)
 yelp_data_quality_summary    ← quality metrics across both core tables
 ```
-
----
-
+-->
 ## Business Questions Answered
 
 | # | Question | Key Concepts |
