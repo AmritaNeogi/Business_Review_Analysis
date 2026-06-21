@@ -119,7 +119,7 @@ Run `analysis` to execute 10 business questions against the prepared tables.
 ## Data Model
 
 <div class="image-container">
-  <img src="yelp_data_model.jpg" alt="Data Model">
+  <img src="yelp_data_model.svg" alt="Data Model">
 </div>
 
 ---
