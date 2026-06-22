@@ -184,7 +184,9 @@ Live dashboard built on top of `yelp_reviews_enriched` via Snowflake live connec
 
 **Data Quality Layer** — `yelp_data_quality_summary` validates null rates, star rating ranges, and date coverage before analysis begins, reflecting real-world pipeline practices.
 
-**Business Judgment in Queries** — minimum review thresholds applied where relevant (e.g., Q6, Q10) to avoid statistically misleading results from low-volume businesses.
+**Business Judgment in Queries** — minimum review thresholds applied where relevant (e.g., Q6, Q10) to avoid statistically misleading results from low-volume businesses. 
+
+**Live Tableau Dashboard on Snowflake** — interactive dashboard built directly on top of `yelp_reviews_enriched` via a live Snowflake connection, visualizing review trends, sentiment distribution, category performance, and top businesses without any data extracts or CSV exports.
 
 ---
 
