@@ -63,6 +63,7 @@ Business Analysis           ← 10 analytical questions
 | Data Processing | Python (Jupyter Notebook) |
 | Sentiment Analysis | Snowflake Python UDF + TextBlob |
 | Query Language | SQL (Snowflake dialect) |
+| Visualization | Tableau Desktop (Live Snowflake Connection) |
 
 ---
 
@@ -112,6 +113,9 @@ Run `data quality` to create `yelp_data_quality_summary` — checks for nulls, i
 ### Step 6 — Run business analysis
 Run `analysis` to execute 10 business questions against the prepared tables.
 
+### Step 7 — Visualize in Tableau 
+Connect Tableau Desktop to Snowflake using a live connection via the `LARGEDATA_WH` warehouse and `BUSINESS_REVIEWS_DB` database. See `tableau_snowflake_setup.md` for full connection instructions.
+
 ---
 
 ## Data Model
@@ -157,6 +161,19 @@ yelp_data_quality_summary    ← quality metrics across both core tables
 
 ---
 
+## Tableau Dashboard
+Live dashboard built on top of `yelp_reviews_enriched` via Snowflake live connection.
+
+**Visuals included:**
+- Review trends over time
+- Sentiment distribution by city and state
+- Top businesses by rating and review volume
+- Category popularity breakdown
+- 5-star review percentage by business
+ <!-- [View Dashboard](#) ← add your Tableau Public link here once published -->
+
+---
+
 ## Highlights
 
 **Snowflake External Stage** — credentials and S3 path defined once and reused across all `COPY INTO` statements, following the DRY principle and production best practices.
@@ -176,3 +193,5 @@ yelp_data_quality_summary    ← quality metrics across both core tables
 - **Source:** [Yelp Open Dataset](https://business.yelp.com/data/resources/open-dataset/)
 - **Size:** ~5GB (reviews JSON), split into manageable chunks for S3 upload
 - **Usage:** Subject to Yelp's dataset terms — see `Dataset_User_Agreement.pdf`
+
+
