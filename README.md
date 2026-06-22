@@ -8,6 +8,10 @@ This project demonstrates an end-to-end cloud analytics pipeline using AWS S3, S
 
 ## Project Overview
 
+<div class="image-container">
+  <img src="Overview.png" alt="Project Architecture Diagram">
+</div>
+
 This project builds a full data pipeline using the [Yelp Open Dataset](https://business.yelp.com/data/resources/open-dataset/) — a real-world dataset of over 6 million reviews across 150,000+ businesses. The pipeline covers data ingestion from AWS S3 into Snowflake, JSON flattening, sentiment classification using a Python UDF, and business intelligence analysis across 10 analytical questions.
 
 **Key skills demonstrated:** Cloud data ingestion, semi-structured data handling, Snowflake-native UDFs, SQL window functions, data quality validation, and business analysis.
@@ -48,12 +52,6 @@ Business Analysis           ← 10 analytical questions
 ```
 
 ---
-
-<div class="image-container">
-  <img src="Overview.png" alt="Project Architecture Diagram">
-</div>
-
-
 
 ## Tech Stack
 
