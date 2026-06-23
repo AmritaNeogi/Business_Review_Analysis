@@ -48,7 +48,7 @@ create or replace table yelp_business_categories as
 with exploded as (
     select 
         business_id,
-        trim(lower(A.value)) as category
+        trim(A.value) as category
     from yelp_businesses_table
     , lateral split_to_table(categories, ',') A
     where trim(A.value) is not null
