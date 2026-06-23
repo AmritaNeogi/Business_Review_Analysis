@@ -40,3 +40,25 @@ inner join yelp_businesses_table b
     on r.business_id = b.business_id;
 
 select count(*) from yelp_reviews_enriched;
+
+
+-- Recreate yelp_business_categories with normalized categories --
+
+create or replace table yelp_business_categories as
+with exploded as (
+    select 
+        business_id,
+        trim(lower(A.value)) as category
+    from yelp_businesses_table
+    , lateral split_to_table(categories, ',') A
+    where trim(A.value) is not null
+    and trim(A.value) != ''
+)
+select distinct
+    business_id,
+    category
+from exploded;
+
+-- Verify
+select count(*) from yelp_business_categories;
+select * from yelp_business_categories limit 10;
