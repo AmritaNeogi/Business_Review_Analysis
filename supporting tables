@@ -30,16 +30,17 @@ select
     r.review_stars,
     r.review_text,
     r.sentiments,
-    b.name as business_name,
-    b.city,
-    b.state,
+    INITCAP(b.name) as business_name, -- capitalizes first letter of every word in business name
+    INITCAP(b.city) as city, -- capitalizes first letter of every word in city
+    UPPER(b.state) as state, -- ensures state is always uppercase like "CA", "NV"
     b.categories,
     b.stars as business_stars
 from yelp_reviews_table r
 inner join yelp_businesses_table b
     on r.business_id = b.business_id;
 
-select count(*) from yelp_reviews_enriched;
+select count(*) from yelp_reviews_enriched; -- 6990280
+select * from yelp_reviews_enriched limit 100;
 
 
 -- Recreate yelp_business_categories with normalized categories --
