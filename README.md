@@ -9,7 +9,7 @@ This project demonstrates an end-to-end cloud analytics pipeline using AWS S3, S
 ## Project Overview
 
 <div class="image-container">
-  <img src="Overview.png" alt="Project Architecture Diagram">
+  <img src="Images\Overview.png" alt="Project Architecture Diagram">
 </div>
 
 This project builds a full data pipeline using the [Yelp Open Dataset](https://business.yelp.com/data/resources/open-dataset/) — a real-world dataset of over 6 million reviews across 150,000+ businesses. The pipeline covers data ingestion from AWS S3 into Snowflake, JSON flattening, sentiment classification using a Python UDF, and business intelligence analysis across 10 analytical questions.
@@ -121,7 +121,7 @@ Connect Tableau Desktop to Snowflake using a live connection via the `LARGEDATA_
 ## Data Model
 
 <div class="image-container">
-  <img src="yelp_data_model.svg" alt="Data Model">
+  <img src="Images\yelp_data_model.svg" alt="Data Model">
 </div>
 
 ---
