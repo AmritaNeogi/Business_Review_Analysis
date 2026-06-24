@@ -170,7 +170,17 @@ Live dashboard built on top of `yelp_reviews_enriched` via Snowflake live connec
 - Top businesses by rating and review volume
 - Category popularity breakdown
 - 5-star review percentage by business
- <!-- [View Dashboard](#) ← add your Tableau Public link here once published -->
+
+Interactive dashboard built on live Snowflake connection.
+
+### Dashboard 1 — [Review Trends Analysis](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard1)
+Review volume growth 2005–2022 and average rating trends.
+
+### Dashboard 2 — [Business Performance](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard2)  
+Top 10 cities by review volume and highest rated businesses.
+
+### Dashboard 3 — [Sentiment Analysis](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard3)
+Overall sentiment distribution and category-level breakdown before and after data quality fix.
 
 ---
 
