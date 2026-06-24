@@ -63,6 +63,7 @@ Business Analysis           ← 10 analytical questions
 | Data Processing | Python (Jupyter Notebook) |
 | Sentiment Analysis | Snowflake Python UDF + TextBlob |
 | Query Language | SQL (Snowflake dialect) |
+| Visualization | Tableau Desktop (Live Snowflake Connection) |
 
 ---
 
@@ -112,6 +113,9 @@ Run `data quality` to create `yelp_data_quality_summary` — checks for nulls, i
 ### Step 6 — Run business analysis
 Run `analysis` to execute 10 business questions against the prepared tables.
 
+### Step 7 — Visualize in Tableau 
+Connect Tableau Desktop to Snowflake using a live connection via the `LARGEDATA_WH` warehouse and `BUSINESS_REVIEWS_DB` database. See `tableau_snowflake_setup.md` for full connection instructions.
+
 ---
 
 ## Data Model
@@ -157,6 +161,29 @@ yelp_data_quality_summary    ← quality metrics across both core tables
 
 ---
 
+## Tableau Dashboard
+Live dashboard built on top of `yelp_reviews_enriched` via Snowflake live connection.
+
+**Visuals included:**
+- Review trends over time
+- Sentiment distribution by city and state
+- Top businesses by rating and review volume
+- Category popularity breakdown
+- 5-star review percentage by business
+
+Interactive dashboard built on live Snowflake connection.
+
+### Dashboard 1 — [Review Trends Analysis](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard1)
+Review volume growth 2005–2022 and average rating trends.
+
+### Dashboard 2 — [Business Performance](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard2)  
+Top 10 cities by review volume and highest rated businesses.
+
+### Dashboard 3 — [Sentiment Analysis](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard3)
+Overall sentiment distribution and category-level breakdown before and after data quality fix.
+
+---
+
 ## Highlights
 
 **Snowflake External Stage** — credentials and S3 path defined once and reused across all `COPY INTO` statements, following the DRY principle and production best practices.
@@ -167,7 +194,9 @@ yelp_data_quality_summary    ← quality metrics across both core tables
 
 **Data Quality Layer** — `yelp_data_quality_summary` validates null rates, star rating ranges, and date coverage before analysis begins, reflecting real-world pipeline practices.
 
-**Business Judgment in Queries** — minimum review thresholds applied where relevant (e.g., Q6, Q10) to avoid statistically misleading results from low-volume businesses.
+**Business Judgment in Queries** — minimum review thresholds applied where relevant (e.g., Q6, Q10) to avoid statistically misleading results from low-volume businesses. 
+
+**Live Tableau Dashboard on Snowflake** — interactive dashboard built directly on top of `yelp_reviews_enriched` via a live Snowflake connection, visualizing review trends, sentiment distribution, category performance, and top businesses without any data extracts or CSV exports.
 
 ---
 
@@ -176,3 +205,5 @@ yelp_data_quality_summary    ← quality metrics across both core tables
 - **Source:** [Yelp Open Dataset](https://business.yelp.com/data/resources/open-dataset/)
 - **Size:** ~5GB (reviews JSON), split into manageable chunks for S3 upload
 - **Usage:** Subject to Yelp's dataset terms — see `Dataset_User_Agreement.pdf`
+
+
