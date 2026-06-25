@@ -173,13 +173,13 @@ Live dashboard built on top of `yelp_reviews_enriched` via Snowflake live connec
 
 Interactive dashboard built on live Snowflake connection.
 
-### Dashboard 1 — [Review Trends Analysis](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard1)
+### Dashboard 1 — [Review Trends Analysis](https://public.tableau.com/views/Yelp_Review_Analysis_Public/Dashboard1?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 Review volume growth 2005–2022 and average rating trends.
 
-### Dashboard 2 — [Business Performance](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard2)  
+### Dashboard 2 — [Business Performance](https://public.tableau.com/views/Yelp_Review_Analysis_Public/Dashboard2?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)  
 Top 10 cities by review volume and highest rated businesses.
 
-### Dashboard 3 — [Sentiment Analysis](https://us-east-1.online.tableau.com/t/amritaneogi1994-d9f772e3cf/views/BusinessAnalysis_Yelp/Dashboard3)
+### Dashboard 3 — [Sentiment Analysis](https://public.tableau.com/views/Yelp_Review_Analysis_Public/Dashboard3?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 Overall sentiment distribution and category-level breakdown before and after data quality fix.
 
 ---
